@@ -45,7 +45,7 @@ function makeMove(boxId) {
         document.getElementById(boxId).textContent = 'O';
         document.getElementById(boxId).style.color = 'blue';
     }
-    document.getElementById(boxId).style.fontWeight = "900";
+    document.getElementById(boxId).style.fontWeight = "700";
     document.getElementById(boxId).style.fontSize = "30";
 }
 
