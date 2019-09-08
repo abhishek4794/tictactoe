@@ -1,6 +1,7 @@
-console.log('Loaded');
 let currentPlayerFlag = '1';
-let ticTocMoves = {}
+const totalBoxes = 9;
+let isDraw = false;
+let ticTocMoves = { totalNoOfMoves: 0 }
 let isGameEnd = false;
 
 function initliazeGame() {
@@ -36,6 +37,7 @@ function changeCurrentPlayer() {
 
 function makeMove(boxId) {
     ticTocMoves[boxId] = currentPlayerFlag;
+    ticTocMoves.totalNoOfMoves += 1;
     if (currentPlayerFlag === '1') {
         document.getElementById(boxId).textContent = 'X';
         document.getElementById(boxId).style.color = 'red';
@@ -79,11 +81,21 @@ function checkWinner(boxId) {
             maxCol -= 1;
         }
     }
+    if (!isWinner.includes(true) && ticTocMoves.totalNoOfMoves === totalBoxes) {
+        isDraw = true;
+        return true;
+    }
     return isWinner.includes(true);
 }
 
 function showResults() {
-    document.getElementById('results').textContent = 'Congratulations Player ' + currentPlayerFlag + '!!!'
+    let resultMessage;
+    if (isDraw) {
+        resultMessage = 'Its A Draw';
+    } else {
+        resultMessage = 'Congratulations Player ' + currentPlayerFlag + '!!!';
+    }
+    document.getElementById('results').textContent = resultMessage
     document.getElementById('result-container').style.display = "block";
 }
 
