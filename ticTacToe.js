@@ -57,6 +57,14 @@ function computerMove() {
         console.log('No player can win');
     }
 
+    const center = '11'
+    if (moves.includes(center)) {
+        ticTocMoves[center] = '2'
+        makeMove(center, '2');
+        changeCurrentPlayer();
+        return;
+    }
+
     let remainingCorners = moves.filter(x => corners.includes(x));
     console.log(remainingCorners);
     if (remainingCorners.length) {
