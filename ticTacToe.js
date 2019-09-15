@@ -68,17 +68,6 @@ function computerMove() {
         return;
     }
 
-    let remainingEdges = moves.filter(x => edges.includes(x));
-    console.log(remainingEdges);
-    if (remainingEdges.length) {
-        const randomEgde = Math.floor(Math.random() * remainingEdges.length);
-
-        ticTocMoves[remainingEdges[randomEgde]] = '2'
-        makeMove(remainingEdges[randomEgde], '2');
-        changeCurrentPlayer();
-        return;
-    }
-
     let remainingCorners = moves.filter(x => corners.includes(x));
     console.log(remainingCorners);
     if (remainingCorners.length) {
@@ -90,7 +79,16 @@ function computerMove() {
         return;
     }
 
+    let remainingEdges = moves.filter(x => edges.includes(x));
+    console.log(remainingEdges);
+    if (remainingEdges.length) {
+        const randomEgde = Math.floor(Math.random() * remainingEdges.length);
 
+        ticTocMoves[remainingEdges[randomEgde]] = '2'
+        makeMove(remainingEdges[randomEgde], '2');
+        changeCurrentPlayer();
+        return;
+    }
 
     console.log('No player can win outside for');
 }
