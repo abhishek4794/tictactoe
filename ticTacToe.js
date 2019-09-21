@@ -68,17 +68,6 @@ function computerMove() {
         return;
     }
 
-    let remainingCorners = moves.filter(x => corners.includes(x));
-    console.log(remainingCorners);
-    if (remainingCorners.length) {
-        const randomCorner = Math.floor(Math.random() * remainingCorners.length);
-
-        ticTocMoves[remainingCorners[randomCorner]] = '2'
-        makeMove(remainingCorners[randomCorner], '2');
-        changeCurrentPlayer();
-        return;
-    }
-
     let remainingEdges = moves.filter(x => edges.includes(x));
     console.log(remainingEdges);
     if (remainingEdges.length) {
@@ -86,6 +75,17 @@ function computerMove() {
 
         ticTocMoves[remainingEdges[randomEgde]] = '2'
         makeMove(remainingEdges[randomEgde], '2');
+        changeCurrentPlayer();
+        return;
+    }
+
+    let remainingCorners = moves.filter(x => corners.includes(x));
+    console.log(remainingCorners);
+    if (remainingCorners.length) {
+        const randomCorner = Math.floor(Math.random() * remainingCorners.length);
+
+        ticTocMoves[remainingCorners[randomCorner]] = '2'
+        makeMove(remainingCorners[randomCorner], '2');
         changeCurrentPlayer();
         return;
     }
