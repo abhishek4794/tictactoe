@@ -1,7 +1,7 @@
 let currentPlayerFlag = '1';
 const totalBoxes = 9;
 let isDraw = false;
-let ticTocMoves = { totalNoOfMoves: 0, movesRemaining: ['00', '01', '02', '10', '11', '12', '20', '21', '22'] }
+let ticTocMoves = { totalNoOfMoves: 0, movesRemaining: ['00', '01', '02', '10', '11', '12', '20', '21', '22'], firstMove: null }
 let isGameEnd = false;
 
 function initliazeGame() {
@@ -27,10 +27,8 @@ function tableOnClickListerner(event) {
 
 function computerMove() {
     console.log('Computer thinking...');
-    const corners = ['00', '02', '20', '22'];
-    const edges = ['01', '10', '12', '21'];
+    const remaining = { 'edges': ['01', '10', '12', '21'], 'corners': ['00', '02', '20', '22'] }
     const moves = ticTocMoves.movesRemaining;
-
     for (m in moves) {
         ticTocMoves[moves[m]] = '2'
         if (checkWinner(moves[m], '2')) {
@@ -68,30 +66,54 @@ function computerMove() {
         return;
     }
 
-    let remainingEdges = moves.filter(x => edges.includes(x));
-    console.log(remainingEdges);
-    if (remainingEdges.length) {
-        const randomEgde = Math.floor(Math.random() * remainingEdges.length);
+    if (ticTocMoves.firstMove === '11') {
+        let remainingCorners = moves.filter(x => remaining['corners'].includes(x));
+        console.log(remainingCorners);
+        if (remainingCorners.length) {
+            const randomCorner = Math.floor(Math.random() * remainingCorners.length);
 
-        ticTocMoves[remainingEdges[randomEgde]] = '2'
-        makeMove(remainingEdges[randomEgde], '2');
-        changeCurrentPlayer();
-        return;
+            ticTocMoves[remainingCorners[randomCorner]] = '2'
+            makeMove(remainingCorners[randomCorner], '2');
+            changeCurrentPlayer();
+            return;
+        }
+
+        let remainingEdges = moves.filter(x => remaining['edges'].includes(x));
+        console.log(remainingEdges);
+        if (remainingEdges.length) {
+            const randomEgde = Math.floor(Math.random() * remainingEdges.length);
+
+            ticTocMoves[remainingEdges[randomEgde]] = '2'
+            makeMove(remainingEdges[randomEgde], '2');
+            changeCurrentPlayer();
+            return;
+        }
+    } else {
+        let remainingEdges = moves.filter(x => remaining['edges'].includes(x));
+        console.log(remainingEdges);
+        if (remainingEdges.length) {
+            const randomEgde = Math.floor(Math.random() * remainingEdges.length);
+
+            ticTocMoves[remainingEdges[randomEgde]] = '2'
+            makeMove(remainingEdges[randomEgde], '2');
+            changeCurrentPlayer();
+            return;
+        }
+
+        let remainingCorners = moves.filter(x => remaining['corners'].includes(x));
+        console.log(remainingCorners);
+        if (remainingCorners.length) {
+            const randomCorner = Math.floor(Math.random() * remainingCorners.length);
+
+            ticTocMoves[remainingCorners[randomCorner]] = '2'
+            makeMove(remainingCorners[randomCorner], '2');
+            changeCurrentPlayer();
+            return;
+        }
     }
-
-    let remainingCorners = moves.filter(x => corners.includes(x));
-    console.log(remainingCorners);
-    if (remainingCorners.length) {
-        const randomCorner = Math.floor(Math.random() * remainingCorners.length);
-
-        ticTocMoves[remainingCorners[randomCorner]] = '2'
-        makeMove(remainingCorners[randomCorner], '2');
-        changeCurrentPlayer();
-        return;
-    }
-
     console.log('No player can win outside for');
 }
+
 
 function changeCurrentPlayer() {
     if (currentPlayerFlag === '1') {
@@ -109,6 +131,9 @@ function makeMove(boxId, player) {
     ticTocMoves.movesRemaining.splice(indexOfMove, 1)
     ticTocMoves[boxId] = currentPlayerFlag;
     ticTocMoves.totalNoOfMoves += 1;
+    if (ticTocMoves.firstMove === null) {
+        ticTocMoves.firstMove = boxId
+    }
     if (player === '1') {
         document.getElementById(boxId).textContent = 'X';
         document.getElementById(boxId).style.color = 'red';
