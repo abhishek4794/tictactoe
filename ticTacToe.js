@@ -1,8 +1,11 @@
-let currentPlayerFlag = '1';
 const totalBoxes = 9;
+const centerBoxId = '11'
 let isDraw = false;
 let ticTocMoves = { totalNoOfMoves: 0, movesRemaining: ['00', '01', '02', '10', '11', '12', '20', '21', '22'], firstMove: null }
 let isGameEnd = false;
+let computerFlag = '2'
+let player1Flag = '1'
+let currentPlayerFlag = '1';
 
 function initliazeGame() {
     for (i = 0; i < 3; i++) {
@@ -25,16 +28,24 @@ function tableOnClickListerner(event) {
     }
 }
 
+function makeComputerMove(boxId) {
+    setTimeout(function () {
+        ticTocMoves[boxId] = computerFlag
+        makeMove(boxId, computerFlag);
+        changeCurrentPlayer();
+    }, 500)
+}
+
 function computerMove() {
     console.log('Computer thinking...');
     const remaining = { 'edges': ['01', '10', '12', '21'], 'corners': ['00', '02', '20', '22'] }
     const moves = ticTocMoves.movesRemaining;
+    // Check if computer can win
     for (m in moves) {
-        ticTocMoves[moves[m]] = '2'
-        if (checkWinner(moves[m], '2')) {
-            console.log(moves[m] + 'Player 2 can win');
-            ticTocMoves[moves[m]] = '2'
-            makeMove(moves[m], '2');
+        ticTocMoves[moves[m]] = computerFlag
+        if (checkWinner(moves[m], computerFlag)) {
+            ticTocMoves[moves[m]] = computerFlag
+            makeMove(moves[m], computerFlag);
             isGameEnd = true;
             showResults();
             // changeCurrentPlayer();
@@ -43,71 +54,51 @@ function computerMove() {
         ticTocMoves[moves[m]] = null;
     }
 
+    // Check if Player 1 can win
     for (m in moves) {
-
-        ticTocMoves[moves[m]] = '1'
-        if (checkWinner(moves[m], '1')) {
-            console.log(moves[m] + 'Player 1 can win');
-            ticTocMoves[moves[m]] = '2'
-            makeMove(moves[m], '2');
-            changeCurrentPlayer();
+        ticTocMoves[moves[m]] = player1Flag
+        if (checkWinner(moves[m], player1Flag)) {
+            makeComputerMove(moves[m])
             return;
         }
 
         ticTocMoves[moves[m]] = null;
-        console.log('No player can win');
     }
 
-    const center = '11'
-    if (moves.includes(center)) {
-        ticTocMoves[center] = '2'
-        makeMove(center, '2');
-        changeCurrentPlayer();
+    // Check if Center box is filled
+
+    if (moves.includes(centerBoxId)) {
+        makeComputerMove(centerBoxId)
         return;
     }
 
-    if (ticTocMoves.firstMove === '11') {
+    // Check remaining corners or edges based on users first move
+    if (ticTocMoves.firstMove === centerBoxId) {
         let remainingCorners = moves.filter(x => remaining['corners'].includes(x));
-        console.log(remainingCorners);
         if (remainingCorners.length) {
             const randomCorner = Math.floor(Math.random() * remainingCorners.length);
-
-            ticTocMoves[remainingCorners[randomCorner]] = '2'
-            makeMove(remainingCorners[randomCorner], '2');
-            changeCurrentPlayer();
+            makeComputerMove(remainingCorners[randomCorner])
             return;
         }
 
         let remainingEdges = moves.filter(x => remaining['edges'].includes(x));
-        console.log(remainingEdges);
         if (remainingEdges.length) {
             const randomEgde = Math.floor(Math.random() * remainingEdges.length);
-
-            ticTocMoves[remainingEdges[randomEgde]] = '2'
-            makeMove(remainingEdges[randomEgde], '2');
-            changeCurrentPlayer();
+            makeComputerMove(remainingEdges[randomEgde])
             return;
         }
     } else {
         let remainingEdges = moves.filter(x => remaining['edges'].includes(x));
-        console.log(remainingEdges);
         if (remainingEdges.length) {
             const randomEgde = Math.floor(Math.random() * remainingEdges.length);
-
-            ticTocMoves[remainingEdges[randomEgde]] = '2'
-            makeMove(remainingEdges[randomEgde], '2');
-            changeCurrentPlayer();
+            makeComputerMove(remainingEdges[randomEgde])
             return;
         }
 
         let remainingCorners = moves.filter(x => remaining['corners'].includes(x));
-        console.log(remainingCorners);
         if (remainingCorners.length) {
             const randomCorner = Math.floor(Math.random() * remainingCorners.length);
-
-            ticTocMoves[remainingCorners[randomCorner]] = '2'
-            makeMove(remainingCorners[randomCorner], '2');
-            changeCurrentPlayer();
+            makeComputerMove(remainingCorners[randomCorner])
             return;
         }
     }
